@@ -1,0 +1,228 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		21052B1F13EC832F00B5A7C5 /* SDMMCAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 21052B1D13EC832F00B5A7C5 /* SDMMCAnalyzer.cpp */; };
+		21052B2013EC832F00B5A7C5 /* SDMMCAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 21052B1E13EC832F00B5A7C5 /* SDMMCAnalyzer.h */; };
+		21052B2313EC84B200B5A7C5 /* libAnalyzer.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 21052B2213EC84B200B5A7C5 /* libAnalyzer.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		21052B1D13EC832F00B5A7C5 /* SDMMCAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDMMCAnalyzer.cpp; path = ../src/SDMMCAnalyzer.cpp; sourceTree = "<group>"; };
+		21052B1E13EC832F00B5A7C5 /* SDMMCAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDMMCAnalyzer.h; path = ../src/SDMMCAnalyzer.h; sourceTree = "<group>"; };
+		21052B2213EC84B200B5A7C5 /* libAnalyzer.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libAnalyzer.dylib; path = "../../SaleaeAnalyzerSdk-1.1.9/lib/libAnalyzer.dylib"; sourceTree = "<group>"; };
+		21BC295913EC826C00BA43C2 /* libSDMMCAnalyzer.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libSDMMCAnalyzer.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		21BC295613EC826C00BA43C2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21052B2313EC84B200B5A7C5 /* libAnalyzer.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		21052B2413EC84C000B5A7C5 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				21052B1E13EC832F00B5A7C5 /* SDMMCAnalyzer.h */,
+				21052B1D13EC832F00B5A7C5 /* SDMMCAnalyzer.cpp */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		21052B2513EC84D300B5A7C5 /* Libs */ = {
+			isa = PBXGroup;
+			children = (
+				21052B2213EC84B200B5A7C5 /* libAnalyzer.dylib */,
+			);
+			name = Libs;
+			sourceTree = "<group>";
+		};
+		21BC294E13EC826B00BA43C2 = {
+			isa = PBXGroup;
+			children = (
+				21052B2513EC84D300B5A7C5 /* Libs */,
+				21052B2413EC84C000B5A7C5 /* Sources */,
+				21BC295A13EC826C00BA43C2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		21BC295A13EC826C00BA43C2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				21BC295913EC826C00BA43C2 /* libSDMMCAnalyzer.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		21BC295713EC826C00BA43C2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21052B2013EC832F00B5A7C5 /* SDMMCAnalyzer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		21BC295813EC826C00BA43C2 /* SDMMCAnalyzer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 21BC295D13EC826C00BA43C2 /* Build configuration list for PBXNativeTarget "SDMMCAnalyzer" */;
+			buildPhases = (
+				21BC295513EC826C00BA43C2 /* Sources */,
+				21BC295613EC826C00BA43C2 /* Frameworks */,
+				21BC295713EC826C00BA43C2 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SDMMCAnalyzer;
+			productName = SDMMCAnalyzer;
+			productReference = 21BC295913EC826C00BA43C2 /* libSDMMCAnalyzer.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		21BC295013EC826B00BA43C2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "DSP Group Inc.";
+			};
+			buildConfigurationList = 21BC295313EC826C00BA43C2 /* Build configuration list for PBXProject "SDMMCAnalyzer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 21BC294E13EC826B00BA43C2;
+			productRefGroup = 21BC295A13EC826C00BA43C2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				21BC295813EC826C00BA43C2 /* SDMMCAnalyzer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		21BC295513EC826C00BA43C2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				21052B1F13EC832F00B5A7C5 /* SDMMCAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		21BC295B13EC826C00BA43C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = 4.2;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../SaleaeAnalyzerSdk-1.1.9/include";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		21BC295C13EC826C00BA43C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = 4.2;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../SaleaeAnalyzerSdk-1.1.9/include";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		21BC295E13EC826C00BA43C2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../SaleaeAnalyzerSdk-1.1.9/lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		21BC295F13EC826C00BA43C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../SaleaeAnalyzerSdk-1.1.9/lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		21BC295313EC826C00BA43C2 /* Build configuration list for PBXProject "SDMMCAnalyzer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21BC295B13EC826C00BA43C2 /* Debug */,
+				21BC295C13EC826C00BA43C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		21BC295D13EC826C00BA43C2 /* Build configuration list for PBXNativeTarget "SDMMCAnalyzer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				21BC295E13EC826C00BA43C2 /* Debug */,
+				21BC295F13EC826C00BA43C2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 21BC295013EC826B00BA43C2 /* Project object */;
+}
