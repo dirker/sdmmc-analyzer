@@ -1,14 +1,19 @@
+#include <AnalyzerChannelData.h>
 #include "SDMMCAnalyzer.h"
 
-const char SDMMCAnalyzer::Name[] = "Name";
+const char SDMMCAnalyzer::Name[] = "SDMMC";
 
 SDMMCAnalyzer::SDMMCAnalyzer()
-:	Analyzer()
+:	Analyzer(),
+    mSettings(new SDMMCAnalyzerSettings),
+    mSimulationInitialized(false)
 {
+    SetAnalyzerSettings(mSettings.get());
 }
 
 SDMMCAnalyzer::~SDMMCAnalyzer()
 {
+    KillThread();
 }
 
 const char* SDMMCAnalyzer::GetAnalyzerName() const
@@ -18,6 +23,18 @@ const char* SDMMCAnalyzer::GetAnalyzerName() const
 
 void SDMMCAnalyzer::WorkerThread()
 {
+    mResults.reset(new SDMMCAnalyzerResults(this, mSettings.get()));
+    SetAnalyzerResults(mResults.get());
+    
+    mResults->AddChannelBubblesWillAppearOn(mSettings->mCommandChannel);
+    
+    mClock = GetAnalyzerChannelData(mSettings->mClockChannel);
+    mCommand = GetAnalyzerChannelData(mSettings->mCommandChannel);
+    
+    while (true) {
+        mClock->AdvanceToNextEdge();
+        ReportProgress(mClock->GetSampleNumber());
+    }
 }
 
 bool SDMMCAnalyzer::NeedsRerun()
@@ -27,7 +44,12 @@ bool SDMMCAnalyzer::NeedsRerun()
 
 U32 SDMMCAnalyzer::GenerateSimulationData(U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels)
 {
-    return 0;
+    if (!mSimulationInitialized) {
+        mDataGenerator.Initialize(GetSimulationSampleRate(), mSettings.get());
+        mSimulationInitialized = true;
+    }
+    
+    return mDataGenerator.GenerateSimulationData(newest_sample_requested, sample_rate, simulation_channels);
 }
 
 U32 SDMMCAnalyzer::GetMinimumSampleRateHz()
