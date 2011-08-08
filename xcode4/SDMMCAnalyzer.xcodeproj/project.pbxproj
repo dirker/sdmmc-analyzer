@@ -16,6 +16,8 @@
 		213D832713ECA1E700B01739 /* SDMMCSimulationDataGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 213D832513ECA1E700B01739 /* SDMMCSimulationDataGenerator.h */; };
 		213D832C13EEF53600B01739 /* SDMMCAnalyzerResults.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 213D832A13EEF53500B01739 /* SDMMCAnalyzerResults.cpp */; };
 		213D832D13EEF53600B01739 /* SDMMCAnalyzerResults.h in Headers */ = {isa = PBXBuildFile; fileRef = 213D832B13EEF53500B01739 /* SDMMCAnalyzerResults.h */; };
+		213EA45F13EF3D2000D3CDF0 /* SDMMCHelpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 213EA45D13EF3D2000D3CDF0 /* SDMMCHelpers.cpp */; };
+		213EA46013EF3D2000D3CDF0 /* SDMMCHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 213EA45E13EF3D2000D3CDF0 /* SDMMCHelpers.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		213D832513ECA1E700B01739 /* SDMMCSimulationDataGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDMMCSimulationDataGenerator.h; path = ../src/SDMMCSimulationDataGenerator.h; sourceTree = "<group>"; };
 		213D832A13EEF53500B01739 /* SDMMCAnalyzerResults.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDMMCAnalyzerResults.cpp; path = ../src/SDMMCAnalyzerResults.cpp; sourceTree = "<group>"; };
 		213D832B13EEF53500B01739 /* SDMMCAnalyzerResults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDMMCAnalyzerResults.h; path = ../src/SDMMCAnalyzerResults.h; sourceTree = "<group>"; };
+		213EA45D13EF3D2000D3CDF0 /* SDMMCHelpers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SDMMCHelpers.cpp; path = ../src/SDMMCHelpers.cpp; sourceTree = "<group>"; };
+		213EA45E13EF3D2000D3CDF0 /* SDMMCHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDMMCHelpers.h; path = ../src/SDMMCHelpers.h; sourceTree = "<group>"; };
 		21BC295913EC826C00BA43C2 /* libSDMMCAnalyzer.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libSDMMCAnalyzer.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -52,6 +56,8 @@
 				21052B1E13EC832F00B5A7C5 /* SDMMCAnalyzer.h */,
 				213D832A13EEF53500B01739 /* SDMMCAnalyzerResults.cpp */,
 				213D832B13EEF53500B01739 /* SDMMCAnalyzerResults.h */,
+				213EA45D13EF3D2000D3CDF0 /* SDMMCHelpers.cpp */,
+				213EA45E13EF3D2000D3CDF0 /* SDMMCHelpers.h */,
 				213D832413ECA1E700B01739 /* SDMMCSimulationDataGenerator.cpp */,
 				213D832513ECA1E700B01739 /* SDMMCSimulationDataGenerator.h */,
 			);
@@ -94,6 +100,7 @@
 				213D832313EC959600B01739 /* SDMMCAnalyzerSettings.h in Headers */,
 				213D832713ECA1E700B01739 /* SDMMCSimulationDataGenerator.h in Headers */,
 				213D832D13EEF53600B01739 /* SDMMCAnalyzerResults.h in Headers */,
+				213EA46013EF3D2000D3CDF0 /* SDMMCHelpers.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,6 +158,7 @@
 				213D832213EC959600B01739 /* SDMMCAnalyzerSettings.cpp in Sources */,
 				213D832613ECA1E700B01739 /* SDMMCSimulationDataGenerator.cpp in Sources */,
 				213D832C13EEF53600B01739 /* SDMMCAnalyzerResults.cpp in Sources */,
+				213EA45F13EF3D2000D3CDF0 /* SDMMCHelpers.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
