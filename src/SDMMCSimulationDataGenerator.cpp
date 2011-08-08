@@ -1,5 +1,6 @@
 #include "SDMMCSimulationDataGenerator.h"
 #include "SDMMCAnalyzerSettings.h"
+#include "SDMMCHelpers.h"
 
 SDMMCSimulationDataGenerator::SDMMCSimulationDataGenerator()
 {
@@ -57,35 +58,32 @@ void SDMMCSimulationDataGenerator::CreateIdle(double seconds)
 
 void SDMMCSimulationDataGenerator::CreateCommand()
 {
+    U64 data =
+        (0ull << 39) | /* start bit */
+        (1ull << 38) | /* transmission bit: host */
+        (0ull << 32) | /* command index */
+        (0ull <<  0);  /* command argument */
+
     /* make sure we continue with clock as high */
     if (mClock->GetCurrentBitState() != BIT_HIGH) {
         mClock->Transition();
         mChannels.AdvanceAll(mClockGenerator.AdvanceByHalfPeriod(.5));
     }
     
-    /* start bit */
-    mCommand->TransitionIfNeeded(BIT_LOW);
-    CreateClockPeriod();
+    BitExtractor bits(data, AnalyzerEnums::MsbFirst, 40);
     
-    /* host transfers */
-    mCommand->TransitionIfNeeded(BIT_HIGH);
-    CreateClockPeriod();
-    
-    /* index: 0 */
-    for (int i = 0; i < 6; i++) {
-        mCommand->TransitionIfNeeded(BIT_LOW);
+    for (int i = 0; i < 40; i++) {
+        mCommand->TransitionIfNeeded(bits.GetNextBit());
         CreateClockPeriod();
     }
+
+    /* FIXME: ugly, only works on little-endian */
+    U8 crc = SDMMCHelpers::crc7((U8 *)&data, 5);
     
-    /* argument: 0 */
-    for (int i = 0; i < 32; i++) {
-        mCommand->TransitionIfNeeded(BIT_LOW);
-        CreateClockPeriod();
-    }
-    
-    /* FIXME: calculate real crc7 */
     for (int i = 0; i < 7; i++) {
-        mCommand->Transition();
+        crc <<= 1;
+
+        mCommand->TransitionIfNeeded(crc & 0x80 ? BIT_HIGH : BIT_LOW);
         CreateClockPeriod();
     }
     
