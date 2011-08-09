@@ -201,6 +201,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\SDMMCHelpers.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\SDMMCHelpers.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\SDMMCSimulationDataGenerator.cpp"
 				>
 			</File>
