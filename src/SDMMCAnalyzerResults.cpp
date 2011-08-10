@@ -3,9 +3,9 @@
 #include "SDMMCAnalyzerSettings.h"
 
 SDMMCAnalyzerResults::SDMMCAnalyzerResults(SDMMCAnalyzer* analyzer, SDMMCAnalyzerSettings* settings)
-:   AnalyzerResults(),
-    mAnalyzer(analyzer),
-    mSettings(settings)
+:	AnalyzerResults(),
+	mAnalyzer(analyzer),
+	mSettings(settings)
 {
 }
 
@@ -15,7 +15,7 @@ SDMMCAnalyzerResults::~SDMMCAnalyzerResults()
 
 void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel, DisplayBase display_base)
 {
-    ClearResultStrings();
+	ClearResultStrings();
 	Frame frame = GetFrame(frame_index);
 
 	switch (frame.mType) {
@@ -36,7 +36,7 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 
 		AddResultString("CMD", str_cmd,
 		                ", ",
-						"arg = ", str_arg);
+		                "arg = ", str_arg);
 		break;
 	}
 

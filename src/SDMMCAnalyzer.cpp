@@ -7,15 +7,15 @@ const char SDMMCAnalyzer::Name[] = "SDMMC";
 
 SDMMCAnalyzer::SDMMCAnalyzer()
 :	Analyzer(),
-    mSettings(new SDMMCAnalyzerSettings),
-    mSimulationInitialized(false)
+	mSettings(new SDMMCAnalyzerSettings),
+	mSimulationInitialized(false)
 {
-    SetAnalyzerSettings(mSettings.get());
+	SetAnalyzerSettings(mSettings.get());
 }
 
 SDMMCAnalyzer::~SDMMCAnalyzer()
 {
-    KillThread();
+	KillThread();
 }
 
 const char* SDMMCAnalyzer::GetAnalyzerName() const
@@ -26,12 +26,12 @@ const char* SDMMCAnalyzer::GetAnalyzerName() const
 void SDMMCAnalyzer::WorkerThread()
 {
 	mResults.reset(new SDMMCAnalyzerResults(this, mSettings.get()));
-    SetAnalyzerResults(mResults.get());
-    
-    mResults->AddChannelBubblesWillAppearOn(mSettings->mCommandChannel);
-    
-    mClock = GetAnalyzerChannelData(mSettings->mClockChannel);
-    mCommand = GetAnalyzerChannelData(mSettings->mCommandChannel);
+	SetAnalyzerResults(mResults.get());
+
+	mResults->AddChannelBubblesWillAppearOn(mSettings->mCommandChannel);
+
+	mClock = GetAnalyzerChannelData(mSettings->mClockChannel);
+	mCommand = GetAnalyzerChannelData(mSettings->mCommandChannel);
 
 	while (true) {
 		int cmdindex;
@@ -58,22 +58,22 @@ void SDMMCAnalyzer::WorkerThread()
 
 bool SDMMCAnalyzer::NeedsRerun()
 {
-    return false;
+	return false;
 }
 
 U32 SDMMCAnalyzer::GenerateSimulationData(U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels)
 {
-    if (!mSimulationInitialized) {
-        mDataGenerator.Initialize(GetSimulationSampleRate(), mSettings.get());
-        mSimulationInitialized = true;
-    }
-    
-    return mDataGenerator.GenerateSimulationData(newest_sample_requested, sample_rate, simulation_channels);
+	if (!mSimulationInitialized) {
+	mDataGenerator.Initialize(GetSimulationSampleRate(), mSettings.get());
+	mSimulationInitialized = true;
+	}
+
+	return mDataGenerator.GenerateSimulationData(newest_sample_requested, sample_rate, simulation_channels);
 }
 
 U32 SDMMCAnalyzer::GetMinimumSampleRateHz()
 {
-    return 400000 * 4;
+	return 400000 * 4;
 }
 
 void SDMMCAnalyzer::AdvanceToNextClockRising()
@@ -151,7 +151,7 @@ int SDMMCAnalyzer::TryReadCommand()
 	mResults->AddMarker(mClock->GetSampleNumber(), AnalyzerResults::Stop, mSettings->mCommandChannel);
 
 	mResults->CommitResults();
-    ReportProgress(mClock->GetSampleNumber());
+	ReportProgress(mClock->GetSampleNumber());
 	
 	return index;
 }
