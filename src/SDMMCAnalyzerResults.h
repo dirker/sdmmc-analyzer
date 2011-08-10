@@ -16,6 +16,13 @@ public:
     virtual void GenerateFrameTabularText(U64 frame_index, DisplayBase display_base);
     virtual void GeneratePacketTabularText(U64 packet_id, DisplayBase display_base);
     virtual void GenerateTransactionTabularText(U64 transaction_id, DisplayBase display_base);
+
+public:
+	enum FrameType {
+		FRAMETYPE_HEADER,
+		FRAMETYPE_COMMAND,
+		FRAMETYPE_CRC,
+	};
     
 protected:
     SDMMCAnalyzer *mAnalyzer;

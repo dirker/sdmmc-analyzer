@@ -48,7 +48,7 @@ void SDMMCSimulationDataGenerator::CreateClockPeriod()
 
 void SDMMCSimulationDataGenerator::CreateIdle(double seconds)
 {
-    U64 samples = 400000.0 * seconds;
+    U64 samples = (U64)(400000.0 * seconds);
     U64 orig = mClock->GetCurrentSampleNumber();
     
     while ((mClock->GetCurrentSampleNumber() - orig) < samples) {

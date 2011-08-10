@@ -6,6 +6,7 @@
 #include "SDMMCAnalyzerResults.h"
 #include "SDMMCSimulationDataGenerator.h"
 #include "SDMMCAnalyzer.h"
+#include "SDMMCHelpers.h"
 
 class ANALYZER_EXPORT SDMMCAnalyzer : public Analyzer
 {
@@ -23,6 +24,11 @@ public:
 
     virtual U32 GenerateSimulationData( U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels );
     virtual U32 GetMinimumSampleRateHz();
+	
+protected:
+	void AdvanceToNextClockRising();
+	int TryReadCommand();
+	int WaitForAndReadMMCResponse(enum MMCResponse response);
 
 protected:
     std::auto_ptr<SDMMCAnalyzerSettings> mSettings;
