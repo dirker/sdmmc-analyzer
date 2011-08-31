@@ -19,7 +19,8 @@ public:
 protected:
 	void CreateClockPeriod();
 	void CreateIdle(double seconds);
-	void CreateCommand();
+	void CreateCommand(unsigned int index, unsigned long arg);
+	void CreateResponse48(unsigned int index, unsigned long arg);
 
 protected:
 	SDMMCAnalyzerSettings *mSettings;

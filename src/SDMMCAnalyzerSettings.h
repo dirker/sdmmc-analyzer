@@ -9,6 +9,11 @@ enum SDMMCProtocol {
 	PROTOCOL_SD,
 };
 
+enum SDMMCSampleEdge {
+	SAMPLE_EDGE_RISING,
+	SAMPLE_EDGE_FALLING
+};
+
 class SDMMCAnalyzerSettings : public AnalyzerSettings
 {
 public:
@@ -24,11 +29,13 @@ public:
 	Channel mClockChannel;
 	Channel mCommandChannel;
 	enum SDMMCProtocol mProtocol;
+	enum SDMMCSampleEdge mSampleEdge;
 
 protected:
 	std::auto_ptr<AnalyzerSettingInterfaceChannel> mClockChannelInterface;
 	std::auto_ptr<AnalyzerSettingInterfaceChannel> mCommandChannelInterface;
 	std::auto_ptr<AnalyzerSettingInterfaceNumberList> mProtocolInterface;
+	std::auto_ptr<AnalyzerSettingInterfaceNumberList> mSampleEdgeInterface;
 };
 
 #endif

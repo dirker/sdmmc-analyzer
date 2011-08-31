@@ -4,7 +4,8 @@
 SDMMCAnalyzerSettings::SDMMCAnalyzerSettings()
 :	mClockChannel(UNDEFINED_CHANNEL),
 	mCommandChannel(UNDEFINED_CHANNEL),
-	mProtocol(PROTOCOL_MMC)
+	mProtocol(PROTOCOL_MMC),
+	mSampleEdge(SAMPLE_EDGE_RISING)
 {
 	mClockChannelInterface.reset(new AnalyzerSettingInterfaceChannel);
 	mClockChannelInterface->SetTitleAndTooltip("Clock", "Clock (CLK)");
@@ -19,9 +20,15 @@ SDMMCAnalyzerSettings::SDMMCAnalyzerSettings()
 	mProtocolInterface->AddNumber(PROTOCOL_MMC, "MMC", "MMC protocol");
 	mProtocolInterface->AddNumber(PROTOCOL_SD,	"SD",  "SD protocol");
 
+	mSampleEdgeInterface.reset(new AnalyzerSettingInterfaceNumberList);
+	mSampleEdgeInterface->SetTitleAndTooltip("Sample edge", "Clock sampling edge");
+	mSampleEdgeInterface->AddNumber(SAMPLE_EDGE_RISING,  "Rising",  "Sample on rising edge");
+	mSampleEdgeInterface->AddNumber(SAMPLE_EDGE_FALLING, "Falling", "Sample on falling edge");
+
 	AddInterface(mClockChannelInterface.get());
 	AddInterface(mCommandChannelInterface.get());
 	AddInterface(mProtocolInterface.get());
+	AddInterface(mSampleEdgeInterface.get());
 
 	ClearChannels();
 	AddChannel(mClockChannel, "Clock", false);
@@ -45,6 +52,7 @@ bool SDMMCAnalyzerSettings::SetSettingsFromInterfaces()
 	mClockChannel = clk;
 	mCommandChannel = cmd;
 	mProtocol = SDMMCProtocol((U32)mProtocolInterface->GetNumber());
+	mSampleEdge = SDMMCSampleEdge((U32)mSampleEdgeInterface->GetNumber());
 
 	ClearChannels();
 	AddChannel(mClockChannel, "Clock", true);
@@ -58,17 +66,20 @@ void SDMMCAnalyzerSettings::UpdateInterfacesFromSettings()
 	mClockChannelInterface->SetChannel(mClockChannel);
 	mCommandChannelInterface->SetChannel(mCommandChannel);
 	mProtocolInterface->SetNumber(mProtocol);
+	mSampleEdgeInterface->SetNumber(mSampleEdge);
 }
 
 void SDMMCAnalyzerSettings::LoadSettings(const char *settings)
 {
 	SimpleArchive archive;
+	U32 tmp;
 
 	archive.SetString(settings);
 
 	archive >> mClockChannel;
 	archive >> mCommandChannel;
-	archive >> *(U32*)&mProtocol;
+	archive >> tmp; mProtocol = SDMMCProtocol(tmp);
+	archive >> tmp; mSampleEdge = SDMMCSampleEdge(tmp);
 
 	ClearChannels();
 	AddChannel(mClockChannel, "Clock", true);
@@ -84,6 +95,7 @@ const char *SDMMCAnalyzerSettings::SaveSettings()
 	archive << mClockChannel;
 	archive << mCommandChannel;
 	archive << mProtocol;
+	archive << mSampleEdge;
 
 	return SetReturnString(archive.GetString());
 }
