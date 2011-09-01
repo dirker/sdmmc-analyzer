@@ -26,9 +26,9 @@ public:
 	virtual U32 GetMinimumSampleRateHz();
 
 protected:
-	void AdvanceToNextClockRising();
+	void AdvanceToNextClock();
 	int TryReadCommand();
-	int WaitForAndReadMMCResponse(enum MMCResponse response);
+	int WaitForAndReadMMCResponse(struct MMCResponse response);
 
 protected:
 	std::auto_ptr<SDMMCAnalyzerSettings> mSettings;

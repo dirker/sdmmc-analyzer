@@ -30,7 +30,13 @@ U32 SDMMCSimulationDataGenerator::GenerateSimulationData(U64 newest_sample_reque
 
 	while (mClock->GetCurrentSampleNumber() < adjusted_newest_sample_requested) {
 		CreateIdle(0.1);
-		CreateCommand();
+		CreateCommand(0, 0);
+		CreateIdle(0.01);
+		CreateCommand(1, 0);
+		CreateResponse48(1, 0x00FF8000);
+		CreateIdle(0.01);
+		CreateCommand(1, 0x40300000);
+		CreateResponse48(1, 0x80FF8000);
 	}
 
 	*channels = mChannels.GetArray();
@@ -56,19 +62,58 @@ void SDMMCSimulationDataGenerator::CreateIdle(double seconds)
 	}
 }
 
-void SDMMCSimulationDataGenerator::CreateCommand()
+void SDMMCSimulationDataGenerator::CreateCommand(unsigned int index, unsigned long arg)
 {
 	U64 data =
-		(0ull << 39) | /* start bit */
-		(1ull << 38) | /* transmission bit: host */
-		(0ull << 32) | /* command index */
-		(0ull <<  0);  /* command argument */
+		(0ull       << 39) | /* start bit */
+		(1ull       << 38) | /* transmission bit: host */
+		((U64)index << 32) | /* command index */
+		((U64)arg   <<  0);  /* command argument */
 
 	/* make sure we continue with clock as high */
 	if (mClock->GetCurrentBitState() != BIT_HIGH) {
 		mClock->Transition();
 		mChannels.AdvanceAll(mClockGenerator.AdvanceByHalfPeriod(.5));
 	}
+
+	BitExtractor bits(data, AnalyzerEnums::MsbFirst, 40);
+
+	for (int i = 0; i < 40; i++) {
+		mCommand->TransitionIfNeeded(bits.GetNextBit());
+		CreateClockPeriod();
+	}
+
+	/* FIXME: ugly, only works on little-endian */
+	U8 crc = SDMMCHelpers::crc7((U8 *)&data, 5);
+
+	for (int i = 0; i < 7; i++) {
+		crc <<= 1;
+
+		mCommand->TransitionIfNeeded(crc & 0x80 ? BIT_HIGH : BIT_LOW);
+		CreateClockPeriod();
+	}
+
+	/* stop bit */
+	mCommand->TransitionIfNeeded(BIT_HIGH);
+	CreateClockPeriod();
+}
+
+void SDMMCSimulationDataGenerator::CreateResponse48(unsigned int index, unsigned long arg)
+{
+	U64 data =
+		(0ull       << 39) | /* start bit */
+		(0ull       << 38) | /* transmission bit: host */
+		((U64)index << 32) | /* command index */
+		((U64)arg   <<  0);  /* command argument */
+
+	/* make sure we continue with clock as high */
+	if (mClock->GetCurrentBitState() != BIT_HIGH) {
+		mClock->Transition();
+		mChannels.AdvanceAll(mClockGenerator.AdvanceByHalfPeriod(.5));
+	}
+
+	CreateClockPeriod();
+	CreateClockPeriod();
 
 	BitExtractor bits(data, AnalyzerEnums::MsbFirst, 40);
 

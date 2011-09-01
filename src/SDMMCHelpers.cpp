@@ -1,5 +1,76 @@
 #include "SDMMCHelpers.h"
 
+static struct MMCResponse responses[64] = {
+	/*  0 */ {MMC_RSP_NONE,     0,   0, false},
+	/*  1 */ {MMC_RSP_R3,      32,   5, false},
+	/*  2 */ {MMC_RSP_R2_CID, 128,   5, false},
+	/*  3 */ {MMC_RSP_R1,      32,  64, false},
+	/*  4 */ {MMC_RSP_NONE,     0,   0, false},
+	/*  5 */ {MMC_RSP_R1,      32,  64, true},
+	/*  6 */ {MMC_RSP_R1,      32,  64, true},
+	/*  7 */ {MMC_RSP_R1,      32,  64, true},
+	/*  8 */ {MMC_RSP_R1,      32,  64, false},
+	/*  9 */ {MMC_RSP_R2_CSD, 128,  64, false},
+	/* 10 */ {MMC_RSP_R2_CID, 128,  64, false},
+	/* 11 */ {MMC_RSP_R1,      32,  64, false},
+	/* 12 */ {MMC_RSP_R1,      32,  64, false},
+	/* 13 */ {MMC_RSP_R1,      32,  64, false},
+	/* 14 */ {MMC_RSP_R1,      32,  64, false},
+	/* 15 */ {MMC_RSP_NONE,     0,   0, false},
+	/* 16 */ {MMC_RSP_R1,      32,  64, false},
+	/* 17 */ {MMC_RSP_R1,      32,  64, false},
+	/* 18 */ {MMC_RSP_R1,      32,  64, false},
+	/* 19 */ {MMC_RSP_R1,      32,  64, false},
+	/* 20 */ {MMC_RSP_R1,      32,  64, false},
+	/* 21 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 22 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 23 */ {MMC_RSP_R1,      32,  64, false},
+	/* 24 */ {MMC_RSP_R1,      32,  64, false},
+	/* 25 */ {MMC_RSP_R1,      32,  64, false},
+	/* 26 */ {MMC_RSP_R1,      32,  64, false},
+	/* 27 */ {MMC_RSP_R1,      32,  64, false},
+	/* 28 */ {MMC_RSP_R1,      32,  64, true},
+	/* 29 */ {MMC_RSP_R1,      32,  64, true},
+	/* 30 */ {MMC_RSP_R1,      32,  64, false},
+	/* 31 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 32 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 33 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 34 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 35 */ {MMC_RSP_R1,      32,  64, false},
+	/* 36 */ {MMC_RSP_R1,      32,  64, false},
+	/* 37 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 38 */ {MMC_RSP_R1,      32,  64, true},
+	/* 39 */ {MMC_RSP_R4,      32,  64, false},
+	/* 40 */ {MMC_RSP_R5,      32,  64, false},
+	/* 41 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 42 */ {MMC_RSP_R1,      32,  64, false},
+	/* 43 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 44 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 45 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 46 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 47 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 48 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 49 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 50 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 51 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 52 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 53 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 54 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 55 */ {MMC_RSP_R1,      32,  64, false},
+	/* 56 */ {MMC_RSP_R1,      32,  64, false},
+	/* 57 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 58 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 59 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 60 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 61 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 62 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+	/* 63 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
+};
+
+static struct MMCResponse invalid_response = {
+	MMC_RSP_NONE,  0,   0, false
+};
+
 U8 SDMMCHelpers::crc7(const U8 *data, unsigned int size)
 {
 	U8 crc = 0;
@@ -12,68 +83,12 @@ U8 SDMMCHelpers::crc7(const U8 *data, unsigned int size)
 	return __crc7_finalize(crc);
 }
 
-enum MMCResponse SDMMCHelpers::MMCCommandResponse(unsigned int index)
+struct MMCResponse SDMMCHelpers::MMCCommandResponse(unsigned int index)
 {
-	switch (index) {
-	case 0:
-		return MMC_RSP_NONE;
-	case 1:
-		return MMC_RSP_R3;
-	case 2:
-		return MMC_RSP_R2;
-	case 3:
-		return MMC_RSP_R1;
-	case 4:
-		return MMC_RSP_NONE;
-	case 5:
-	case 6:
-	case 7:
-		return MMC_RSP_R1b;
-	case 8:
-		return MMC_RSP_R1;
-	case 9:
-	case 10:
-		return MMC_RSP_R2;
-	case 11:
-	case 12:
-	case 13:
-	case 14:
-		return MMC_RSP_R1;
-	case 15:
-		return MMC_RSP_NONE;
-	case 16:
-	case 17:
-	case 18:
-	case 19:
-	case 20:
-	case 23:
-	case 24:
-	case 25:
-	case 26:
-	case 27:
-		return MMC_RSP_R1;
-	case 28:
-	case 29:
-		return MMC_RSP_R1b;
-	case 30:
-		return MMC_RSP_R1;
-	case 35:
-	case 36:
-		return MMC_RSP_R1;
-	case 38:
-		return MMC_RSP_R1b;
-	case 39:
-		return MMC_RSP_R4;
-	case 40:
-		return MMC_RSP_R5;
-	case 42:
-	case 55:
-	case 56:
-		return MMC_RSP_R1;
+	if (index > 63)
+		return invalid_response;
 
-	default:
-		return MMC_RSP_NONE;
-	}
+	return responses[index];
 }
 
 /*
