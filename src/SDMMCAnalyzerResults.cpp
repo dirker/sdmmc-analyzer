@@ -48,7 +48,7 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 		switch (frame.mFlags) {
 		case MMC_RSP_R1:
 		{
-			char *str_state = "reserved";
+			const char *str_state = "reserved";
 			std::string str_flags("");
 
 			switch ((frame.mData1 >> 9) & 0xf) {
@@ -152,13 +152,13 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 			pname[5] = (frame.mData2 >> 56) & 0xff;
 			pname[6] = 0;
 
-			int prv = (frame.mData2 >> 48) & 0xff;
+			unsigned prv = (unsigned)((frame.mData2 >> 48) & 0xff);
 			prv_str[0] = '0' + ((prv >> 4) & 0x0f);
 			prv_str[1] = '.';
 			prv_str[2] = '0' + (prv & 0x0f);
 			prv_str[3] = 0;
 
-			unsigned long psn = (frame.mData2 >> 16) & 0xfffffffful;
+			unsigned psn = (unsigned)((frame.mData2 >> 16) & 0xfffffffful);
 			AnalyzerHelpers::GetNumberString(psn, Decimal, 32, psn_str, sizeof(psn_str));
 
 			res += " pnm='";
