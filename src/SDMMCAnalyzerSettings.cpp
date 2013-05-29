@@ -7,20 +7,20 @@ SDMMCAnalyzerSettings::SDMMCAnalyzerSettings()
 	mProtocol(PROTOCOL_MMC),
 	mSampleEdge(SAMPLE_EDGE_RISING)
 {
-	mClockChannelInterface.reset(new AnalyzerSettingInterfaceChannel);
+	mClockChannelInterface.reset(new AnalyzerSettingInterfaceChannel());
 	mClockChannelInterface->SetTitleAndTooltip("Clock", "Clock (CLK)");
 	mClockChannelInterface->SetChannel(mClockChannel);
 
-	mCommandChannelInterface.reset(new AnalyzerSettingInterfaceChannel);
+	mCommandChannelInterface.reset(new AnalyzerSettingInterfaceChannel());
 	mCommandChannelInterface->SetTitleAndTooltip("Command", "Command (CMD)");
 	mCommandChannelInterface->SetChannel(mCommandChannel);
 
-	mProtocolInterface.reset(new AnalyzerSettingInterfaceNumberList);
+	mProtocolInterface.reset(new AnalyzerSettingInterfaceNumberList());
 	mProtocolInterface->SetTitleAndTooltip("Protocol", "Protocol");
 	mProtocolInterface->AddNumber(PROTOCOL_MMC, "MMC", "MMC protocol");
 	mProtocolInterface->AddNumber(PROTOCOL_SD,	"SD",  "SD protocol");
 
-	mSampleEdgeInterface.reset(new AnalyzerSettingInterfaceNumberList);
+	mSampleEdgeInterface.reset(new AnalyzerSettingInterfaceNumberList());
 	mSampleEdgeInterface->SetTitleAndTooltip("Sample edge", "Clock sampling edge");
 	mSampleEdgeInterface->AddNumber(SAMPLE_EDGE_RISING,  "Rising",  "Sample on rising edge");
 	mSampleEdgeInterface->AddNumber(SAMPLE_EDGE_FALLING, "Falling", "Sample on falling edge");

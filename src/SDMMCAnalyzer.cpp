@@ -7,7 +7,7 @@ const char SDMMCAnalyzer::Name[] = "SDMMC";
 
 SDMMCAnalyzer::SDMMCAnalyzer()
 :	Analyzer(),
-	mSettings(new SDMMCAnalyzerSettings),
+	mSettings(new SDMMCAnalyzerSettings()),
 	mSimulationInitialized(false)
 {
 	SetAnalyzerSettings(mSettings.get());
