@@ -26,8 +26,8 @@ public:
 	};
 
 protected:
-	SDMMCAnalyzer *mAnalyzer;
 	SDMMCAnalyzerSettings *mSettings;
+	SDMMCAnalyzer *mAnalyzer;
 };
 
 #endif
