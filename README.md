@@ -20,7 +20,7 @@ Use the Xode project in xcode4/.
 
 ### Linux
 
-Not yet supported
+run ./build_analyzer.py
 
 ### Windows
 
