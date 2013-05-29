@@ -37,6 +37,7 @@ void SDMMCAnalyzer::WorkerThread()
 		int cmdindex;
 
 		ReportProgress(mClock->GetSampleNumber());
+		CheckIfThreadShouldExit();
 		AdvanceToNextClock();
 		
 		cmdindex = TryReadCommand();
