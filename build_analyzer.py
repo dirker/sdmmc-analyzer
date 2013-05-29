@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os, glob, platform
 
 #find out if we're running on mac or linux and set the dynamic library extension
@@ -32,14 +33,14 @@ for o_file in o_files:
     os.remove( o_file )
 os.chdir( ".." )
 
-#find all the cpp files in /source.  We'll compile all of them
-os.chdir( "source" )
+#find all the cpp files in /src.  We'll compile all of them
+os.chdir( "src" )
 cpp_files = glob.glob( "*.cpp" );
 os.chdir( ".." )
 
 #specify the search paths/dependencies/options for gcc
-include_paths = [ "../include" ]
-link_paths = [ "../lib" ]
+include_paths = [ "../SaleaeAnalyzerSdk-1.1.9/include" ]
+link_paths = [ "../SaleaeAnalyzerSdk-1.1.9/lib" ]
 link_dependencies = [ "-lAnalyzer" ] #refers to libAnalyzer.dylib or libAnalyzer.so
 
 debug_compile_flags = "-O0 -w -c -fpic -g"
@@ -58,12 +59,12 @@ for cpp_file in cpp_files:
     release_command = command
     release_command  += release_compile_flags
     release_command += " -o\"release/" + cpp_file.replace( ".cpp", ".o" ) + "\" " #the output file
-    release_command += "\"" + "source/" + cpp_file + "\"" #the cpp file to compile
+    release_command += "\"" + "src/" + cpp_file + "\"" #the cpp file to compile
 
     debug_command = command
     debug_command  += debug_compile_flags
     debug_command += " -o\"debug/" + cpp_file.replace( ".cpp", ".o" ) + "\" " #the output file
-    debug_command += "\"" + "source/" + cpp_file + "\"" #the cpp file to compile
+    debug_command += "\"" + "src/" + cpp_file + "\"" #the cpp file to compile
 
     #run the commands from the command line
     print release_command
