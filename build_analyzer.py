@@ -43,7 +43,7 @@ include_paths = [ "../SaleaeAnalyzerSdk-1.1.9/include" ]
 link_paths = [ "../SaleaeAnalyzerSdk-1.1.9/lib" ]
 link_dependencies = [ "-lAnalyzer" ] #refers to libAnalyzer.dylib or libAnalyzer.so
 
-debug_compile_flags = "-O0 -w -c -fpic -g"
+debug_compile_flags = "-O0 -w -c -fpic -g3"
 release_compile_flags = "-O3 -w -c -fpic"
 
 #loop through all the cpp files, build up the gcc command line, and attempt to compile each cpp file
