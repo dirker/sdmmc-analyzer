@@ -5,8 +5,8 @@
 
 SDMMCAnalyzerResults::SDMMCAnalyzerResults(SDMMCAnalyzer* analyzer, SDMMCAnalyzerSettings* settings)
 :	AnalyzerResults(),
-	mAnalyzer(analyzer),
-	mSettings(settings)
+	mSettings(settings),
+	mAnalyzer(analyzer)
 {
 }
 
