@@ -19,11 +19,13 @@ SDMMCAnalyzerSettings::SDMMCAnalyzerSettings()
 	mProtocolInterface->SetTitleAndTooltip("Protocol", "Protocol");
 	mProtocolInterface->AddNumber(PROTOCOL_MMC, "MMC", "MMC protocol");
 	mProtocolInterface->AddNumber(PROTOCOL_SD,	"SD",  "SD protocol");
+	mProtocolInterface->SetNumber(mProtocol);
 
 	mSampleEdgeInterface.reset(new AnalyzerSettingInterfaceNumberList());
 	mSampleEdgeInterface->SetTitleAndTooltip("Sample edge", "Clock sampling edge");
 	mSampleEdgeInterface->AddNumber(SAMPLE_EDGE_RISING,  "Rising",  "Sample on rising edge");
 	mSampleEdgeInterface->AddNumber(SAMPLE_EDGE_FALLING, "Falling", "Sample on falling edge");
+	mSampleEdgeInterface->SetNumber(mSampleEdge);
 
 	AddInterface(mClockChannelInterface.get());
 	AddInterface(mCommandChannelInterface.get());
