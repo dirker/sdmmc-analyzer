@@ -14,6 +14,69 @@ SDMMCAnalyzerResults::~SDMMCAnalyzerResults()
 {
 }
 
+static const char* cmd_abbrev_from_number(unsigned int cmd_number)
+{
+	if (cmd_number >= 43 && cmd_number <= 47) return "[reserved]";
+	switch (cmd_number) {
+		case 0: return "GO_IDLE_STATE";
+		case 1: return "[reserved]";
+		case 2: return "ALL_SEND_CID";
+		case 3: return "SEND_RELATIVE_ADDR";
+		case 4: return "SET_DSR";
+		case 5: return "[reserved for SDIO]";
+		case 6: return "SWITCH_FUNC";
+		case 7: return "SELECT/DESELECT_CARD";
+		case 8: return "SEND_IF_COND";
+		case 9: return "SEND_CSD";
+		case 10: return "SEND_CID";
+		case 11: return "VOLTAGE_SWITCH";
+		case 12: return "STOP_TRANSMISSION";
+		case 13: return "SEND_STATUS";
+		case 14: return "[reserved]";
+		case 15: return "GO_INACTIVE_STATE";
+		case 16: return "SET_BLOCKLEN";
+		case 17: return "READ_SINGLE_BLOCK";
+		case 18: return "READ_MULTIPLE_BLOCK";
+		case 19: return "SEND_TUNING_BLOCK";
+		case 20: return "SPEED_CLASS_CONTROL";
+		case 21: return "[reserved for DPS]";
+		case 22: return "[reserved]";
+		case 23: return "SET_BLOCK_COUNT";
+		case 24: return "WRITE_BLOCK";
+		case 25: return "WRITE_MULTIPLE_BLOCK";
+		case 26: return "[reserved for manufacturer]";
+		case 27: return "PROGRAM_CSD";
+		case 28: return "SWT_WRITE_PROT";
+		case 29: return "CLR_WRITE_PROT";
+		case 30: return "SEND_WRITE_PROT";
+		case 31: return "[reserved]";
+		case 32: return "ERASE_WR_BLK_START";
+		case 33: return "ERASE_WR_BLK_END";
+		case 34: return "[function dependent]";
+		case 35: return "[function dependent]";
+		case 36: return "[function dependent]";
+		case 37: return "[function dependent]";
+		case 38: return "ERASE";
+		case 39: return "[reserved]";
+		case 40: return "[defined by DPS]";
+		case 41: return "[reserved]";
+		case 42: return "LOCK_UNLOCK";
+		case 48: return "READ_EXTR_SINGLE";
+		case 49: return "WRITE_EXTR_SINGLE";
+		case 50: return "[function dependent]";
+		case 51: return "[reserved]";
+		case 52: return "[sdio]";
+		case 53: return "[sdio]";
+		case 54: return "[sdio]";
+		case 55: return "APP_CMD";
+		case 56: return "GEN_CMD";
+		case 57: return "[function dependent]";
+		case 58: return "READ_EXTR_MULTI";
+		case 59: return "WRITE_EXTR_MULTI";
+		default: return "[invalid command number]";
+	}
+}
+
 void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel, DisplayBase display_base)
 {
 	ClearResultStrings();
@@ -38,6 +101,7 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 		AddResultString("CMD");
 		AddResultString("CMD", str_cmd);
 		AddResultString("CMD", str_cmd, ", arg=", str_arg);
+		AddResultString("CMD", str_cmd, " (", cmd_abbrev_from_number(frame.mData1), "), arg=", str_arg);
 		break;
 	}
 
