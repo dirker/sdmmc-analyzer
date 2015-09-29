@@ -27,7 +27,7 @@ public:
 
 protected:
 	void AdvanceToNextClock();
-	int TryReadCommand();
+    int TryReadCommand(bool appCmd = false);
 	int WaitForAndReadMMCResponse(struct MMCResponse response);
 
 protected:
