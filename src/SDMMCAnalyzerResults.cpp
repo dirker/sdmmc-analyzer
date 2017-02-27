@@ -41,6 +41,20 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 		break;
 	}
 
+    case FRAMETYPE_ACOMMAND:
+    {
+        char str_cmd[4];
+        char str_arg[33];
+
+        AnalyzerHelpers::GetNumberString(frame.mData1, Decimal, 6, str_cmd, sizeof(str_cmd));
+        AnalyzerHelpers::GetNumberString(frame.mData2, display_base, 32, str_arg, sizeof(str_arg));
+
+        AddResultString("ACMD");
+        AddResultString("ACMD", str_cmd);
+        AddResultString("ACMD", str_cmd, ", arg=", str_arg);
+        break;
+    }
+
 	case FRAMETYPE_RESPONSE:
 	{
 		char str_32[33];

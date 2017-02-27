@@ -25,6 +25,8 @@ const char* SDMMCAnalyzer::GetAnalyzerName() const
 
 void SDMMCAnalyzer::WorkerThread()
 {
+    bool appCommandPending = false;
+
 	mResults.reset(new SDMMCAnalyzerResults(this, mSettings.get()));
 	SetAnalyzerResults(mResults.get());
 
@@ -40,7 +42,7 @@ void SDMMCAnalyzer::WorkerThread()
 		CheckIfThreadShouldExit();
 		AdvanceToNextClock();
 		
-		cmdindex = TryReadCommand();
+        cmdindex = TryReadCommand(appCommandPending);
 		if (cmdindex < 0) {
 			/* continue if parsing the command failed */
 			continue;
@@ -51,7 +53,21 @@ void SDMMCAnalyzer::WorkerThread()
 			if (response.mType != MMC_RSP_NONE)
 				WaitForAndReadMMCResponse(response);
 		} else {
-			/* FIXME: implement SD response handling */
+            if (appCommandPending)
+            {
+                struct MMCResponse response = SDMMCHelpers::SDAppCommandResponse(cmdindex);
+                if (response.mType != MMC_RSP_NONE)
+                    WaitForAndReadMMCResponse(response);
+                appCommandPending = false;
+            }
+            else
+            {
+                struct MMCResponse response = SDMMCHelpers::MMCCommandResponse(cmdindex);
+                if (response.mType != MMC_RSP_NONE) {
+                    int result = WaitForAndReadMMCResponse(response);
+                    appCommandPending = ((result > 0) && (cmdindex == 55));
+                }
+            }
 		}
 	}
 }
@@ -87,7 +103,7 @@ void SDMMCAnalyzer::AdvanceToNextClock()
 	mCommand->AdvanceToAbsPosition(mClock->GetSampleNumber());
 }
 
-int SDMMCAnalyzer::TryReadCommand()
+int SDMMCAnalyzer::TryReadCommand(bool appCmd)
 {
 	int index;
 	
@@ -113,7 +129,7 @@ int SDMMCAnalyzer::TryReadCommand()
 		frame.mStartingSampleInclusive = mClock->GetSampleNumber();
 		frame.mData1 = 0;
 		frame.mData2 = 0;
-		frame.mType = SDMMCAnalyzerResults::FRAMETYPE_COMMAND;
+        frame.mType = appCmd ? SDMMCAnalyzerResults::FRAMETYPE_ACOMMAND : SDMMCAnalyzerResults::FRAMETYPE_COMMAND;
 
 		for (int i = 0; i < 6; i++) {
 			frame.mData1 = (frame.mData1 << 1) | mCommand->GetBitState();
