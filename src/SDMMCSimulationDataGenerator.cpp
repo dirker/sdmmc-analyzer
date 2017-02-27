@@ -83,8 +83,15 @@ void SDMMCSimulationDataGenerator::CreateCommand(unsigned int index, unsigned lo
 		CreateClockPeriod();
 	}
 
-	/* FIXME: ugly, only works on little-endian */
-	U8 crc = SDMMCHelpers::crc7((U8 *)&data, 5);
+	U8 crc_data[5];
+
+	crc_data[0] = 0x40 + (U8)index;
+	crc_data[1] = arg >> 24;
+	crc_data[2] = arg >> 16;
+	crc_data[3] = arg >>  8;
+	crc_data[4] = arg;
+			
+	U8 crc = SDMMCHelpers::crc7(crc_data, 5);
 
 	for (int i = 0; i < 7; i++) {
 		crc <<= 1;
