@@ -8,7 +8,7 @@
 #include "SDMMCAnalyzer.h"
 #include "SDMMCHelpers.h"
 
-class ANALYZER_EXPORT SDMMCAnalyzer : public Analyzer
+class ANALYZER_EXPORT SDMMCAnalyzer : public Analyzer2
 {
 public:
 	static const char Name[];
@@ -19,6 +19,7 @@ public:
 
 	virtual const char *GetAnalyzerName() const;
 
+	virtual void SetupResults();
 	virtual void WorkerThread();
 	virtual bool NeedsRerun();
 

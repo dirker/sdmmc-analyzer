@@ -4,7 +4,7 @@
 #include "SDMMCHelpers.h"
 
 SDMMCAnalyzerResults::SDMMCAnalyzerResults(SDMMCAnalyzer* analyzer, SDMMCAnalyzerSettings* settings)
-:	AnalyzerResults(),
+	: AnalyzerResults(),
 	mSettings(settings),
 	mAnalyzer(analyzer)
 {
@@ -16,15 +16,50 @@ SDMMCAnalyzerResults::~SDMMCAnalyzerResults()
 
 void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel, DisplayBase display_base)
 {
+	GenerateFrameText(frame_index, display_base, TEXTTYPE_BUBBLE);
+}
+
+void SDMMCAnalyzerResults::GenerateExportFile(const char* file, DisplayBase display_base, U32 export_type_user_id)
+{
 	ClearResultStrings();
+	AddResultString("not supported");
+}
+
+void SDMMCAnalyzerResults::GenerateFrameTabularText(U64 frame_index, DisplayBase display_base)
+{
+	GenerateFrameText(frame_index, display_base, TEXTTYPE_TABULAR);
+}
+
+void SDMMCAnalyzerResults::GeneratePacketTabularText(U64 packet_id, DisplayBase display_base)
+{
+	ClearResultStrings();
+	AddResultString("not supported");
+}
+
+void SDMMCAnalyzerResults::GenerateTransactionTabularText(U64 transaction_id, DisplayBase display_base)
+{
+	ClearResultStrings();
+	AddResultString("not supported");
+}
+
+void SDMMCAnalyzerResults::GenerateFrameText(U64 frame_index, DisplayBase display_base, TextType text_type) {
+
+	if (text_type == TEXTTYPE_BUBBLE) {
+		ClearResultStrings();
+	}
+	else if (text_type == TEXTTYPE_TABULAR) {
+		ClearTabularText();
+	}
+
+	bool print_short = (text_type == TEXTTYPE_BUBBLE);  //add abbreviations for bubble text at different zoom levels
 	Frame frame = GetFrame(frame_index);
 
 	switch (frame.mType) {
 	case FRAMETYPE_HEADER:
 		if (frame.mData1 == 1)
-			AddResultString("Host sending");
+			AddText(text_type, "Host sending");
 		else
-			AddResultString("Card sending");
+			AddText(text_type, "Card sending");
 		break;
 
 	case FRAMETYPE_COMMAND:
@@ -34,10 +69,12 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 
 		AnalyzerHelpers::GetNumberString(frame.mData1, Decimal, 6, str_cmd, sizeof(str_cmd));
 		AnalyzerHelpers::GetNumberString(frame.mData2, display_base, 32, str_arg, sizeof(str_arg));
-
-		AddResultString("CMD");
-		AddResultString("CMD", str_cmd);
-		AddResultString("CMD", str_cmd, ", arg=", str_arg);
+		if (print_short)
+		{
+			AddText(text_type, "CMD");
+			AddText(text_type, "CMD", str_cmd);
+		}
+		AddText(text_type, "CMD", str_cmd, ", arg=", str_arg);
 		break;
 	}
 
@@ -66,56 +103,59 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 			}
 
 			AnalyzerHelpers::GetNumberString(frame.mData1, display_base, 32, str_32, sizeof(str_32));
-			
-			AddResultString("R1");
-			AddResultString("R1, ", str_state);
-			AddResultString("R1, ", str_state, ", rsp=", str_32);
+
+			if (print_short)
+			{
+				AddText(text_type, "R1");
+				AddText(text_type, "R1, ", str_state);
+			}
+			AddText(text_type, "R1, ", str_state, ", rsp=", str_32);
 
 			if (frame.mData1 & (1 << 31))
-					str_flags += " ADDRESS_OUT_OF_RANGE";
+				str_flags += " ADDRESS_OUT_OF_RANGE";
 			if (frame.mData1 & (1 << 30))
-					str_flags += " ADDRESS_MISALIGN";
+				str_flags += " ADDRESS_MISALIGN";
 			if (frame.mData1 & (1 << 29))
-					str_flags += " BLOCK_LEN_ERROR";
+				str_flags += " BLOCK_LEN_ERROR";
 			if (frame.mData1 & (1 << 28))
-					str_flags += " ERASE_SEQ_ERROR";
+				str_flags += " ERASE_SEQ_ERROR";
 			if (frame.mData1 & (1 << 27))
-					str_flags += " ERASE_PARAM";
+				str_flags += " ERASE_PARAM";
 			if (frame.mData1 & (1 << 26))
-					str_flags += " WP_VIOLATION";
+				str_flags += " WP_VIOLATION";
 			if (frame.mData1 & (1 << 25))
-					str_flags += " CARD_IS_LOCKED";
+				str_flags += " CARD_IS_LOCKED";
 			if (frame.mData1 & (1 << 24))
-					str_flags += " LOCK_UNLOCK_FAILED";
+				str_flags += " LOCK_UNLOCK_FAILED";
 			if (frame.mData1 & (1 << 23))
-					str_flags += " COM_CRC_ERROR";
+				str_flags += " COM_CRC_ERROR";
 			if (frame.mData1 & (1 << 22))
-					str_flags += " ILLEGAL_COMMAND";
+				str_flags += " ILLEGAL_COMMAND";
 			if (frame.mData1 & (1 << 21))
-					str_flags += " CARD_ECC_FAILED";
+				str_flags += " CARD_ECC_FAILED";
 			if (frame.mData1 & (1 << 20))
-					str_flags += " CC_ERROR";
+				str_flags += " CC_ERROR";
 			if (frame.mData1 & (1 << 19))
-					str_flags += " ERROR";
+				str_flags += " ERROR";
 			if (frame.mData1 & (1 << 18))
-					str_flags += " UNDERRUN";
+				str_flags += " UNDERRUN";
 			if (frame.mData1 & (1 << 17))
-					str_flags += " OVERRUN";
+				str_flags += " OVERRUN";
 			if (frame.mData1 & (1 << 16))
-					str_flags += " CID/CSD_OVERWRITE";
+				str_flags += " CID/CSD_OVERWRITE";
 			if (frame.mData1 & (1 << 15))
-					str_flags += " WP_ERASE_SKIP";
+				str_flags += " WP_ERASE_SKIP";
 			if (frame.mData1 & (1 << 13))
-					str_flags += " ERASE_RESET";
+				str_flags += " ERASE_RESET";
 			if (frame.mData1 & (1 << 8))
-					str_flags += " READY_FOR_DATA";
+				str_flags += " READY_FOR_DATA";
 			if (frame.mData1 & (1 << 7))
-					str_flags += " SWITCH_ERROR";
+				str_flags += " SWITCH_ERROR";
 			if (frame.mData1 & (1 << 5))
-					str_flags += " APP_CMD";
+				str_flags += " APP_CMD";
 
 			if (str_flags.length() > 0)
-				AddResultString("R1, ", str_state, ", rsp=", str_32, str_flags.c_str());
+				AddText(text_type, "R1, ", str_state, ", rsp=", str_32, str_flags.c_str());
 
 			break;
 		}
@@ -125,10 +165,10 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 			char pname[7], prv_str[4], psn_str[12];
 			char rsp_str[64];
 
-			AddResultString(res.c_str());
+			if (print_short) AddText(text_type, res.c_str());
 
 			res += " [CID]";
-			AddResultString(res.c_str());
+			if (print_short) AddText(text_type, res.c_str());
 
 			res += " rsp=";
 			AnalyzerHelpers::GetNumberString(frame.mData1 >> 32, display_base, 32, rsp_str, sizeof(rsp_str));
@@ -142,13 +182,13 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 			res += " ";
 			AnalyzerHelpers::GetNumberString(frame.mData2 & 0xffffffffull, display_base, 32, rsp_str, sizeof(rsp_str));
 			res += rsp_str;
-			AddResultString(res.c_str());
+			if (print_short) AddText(text_type, res.c_str());
 
 			pname[0] = (frame.mData1 >> 32) & 0xff;
 			pname[1] = (frame.mData1 >> 24) & 0xff;
 			pname[2] = (frame.mData1 >> 16) & 0xff;
-			pname[3] = (frame.mData1 >>  8) & 0xff;
-			pname[4] = (frame.mData1 >>  0) & 0xff;
+			pname[3] = (frame.mData1 >> 8) & 0xff;
+			pname[4] = (frame.mData1 >> 0) & 0xff;
 			pname[5] = (frame.mData2 >> 56) & 0xff;
 			pname[6] = 0;
 
@@ -167,7 +207,7 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 			res += prv_str;
 			res += " psn=";
 			res += psn_str;
-			AddResultString(res.c_str());
+			AddText(text_type, res.c_str());
 
 			break;
 		}
@@ -176,10 +216,10 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 			std::string res("R2");
 			char rsp_str[64];
 
-			AddResultString(res.c_str());
+			if (print_short) AddText(text_type, res.c_str());
 
 			res += " [CSD]";
-			AddResultString(res.c_str());
+			if (print_short) AddText(text_type, res.c_str());
 
 			res += " rsp=";
 			AnalyzerHelpers::GetNumberString(frame.mData1 >> 32, display_base, 32, rsp_str, sizeof(rsp_str));
@@ -193,20 +233,20 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 			res += " ";
 			AnalyzerHelpers::GetNumberString(frame.mData2 & 0xffffffffull, display_base, 32, rsp_str, sizeof(rsp_str));
 			res += rsp_str;
-			AddResultString(res.c_str());
+			AddText(text_type, res.c_str());
 
 			break;
 		}
 		case MMC_RSP_R3:
 			AnalyzerHelpers::GetNumberString(frame.mData1, Hexadecimal, 32, str_32, sizeof(str_32));
-			AddResultString("R3");
-			AddResultString("R3, ocr=", str_32);
+			if (print_short) AddText(text_type, "R3");
+			AddText(text_type, "R3, ocr=", str_32);
 			break;
 		case MMC_RSP_R4:
-			AddResultString("R4");
+			AddText(text_type, "R4");
 			break;
 		case MMC_RSP_R5:
-			AddResultString("R5");
+			AddText(text_type, "R5");
 			break;
 		}
 		break;
@@ -218,36 +258,36 @@ void SDMMCAnalyzerResults::GenerateBubbleText(U64 frame_index, Channel& channel,
 
 		AnalyzerHelpers::GetNumberString(frame.mData1, Hexadecimal, 7, str_crc, sizeof(str_crc));
 
-		AddResultString("CRC");
-		AddResultString("CRC=", str_crc);
+		if (print_short) AddText(text_type, "CRC");
+		AddText(text_type, "CRC=", str_crc);
 		break;
 	}
 
 	default:
-		AddResultString("error");
+		AddText(text_type, "error");
 	}
 }
 
-void SDMMCAnalyzerResults::GenerateExportFile(const char* file, DisplayBase display_base, U32 export_type_user_id)
+void SDMMCAnalyzerResults::AddText(TextType text_type,
+	const char * str1,
+	const char * str2,
+	const char * str3,
+	const char * str4,
+	const char * str5,
+	const char * str6)
 {
-	ClearResultStrings();
-	AddResultString("not supported");
-}
-
-void SDMMCAnalyzerResults::GenerateFrameTabularText(U64 frame_index, DisplayBase display_base)
-{
-	ClearResultStrings();
-	AddResultString("not supported");
-}
-
-void SDMMCAnalyzerResults::GeneratePacketTabularText(U64 packet_id, DisplayBase display_base)
-{
-	ClearResultStrings();
-	AddResultString("not supported");
-}
-
-void SDMMCAnalyzerResults::GenerateTransactionTabularText(U64 transaction_id, DisplayBase display_base)
-{
-	ClearResultStrings();
-	AddResultString("not supported");
+	switch (text_type)
+	{
+	case SDMMCAnalyzerResults::TEXTTYPE_BUBBLE:
+		AddResultString(str1, str2, str3, str4, str5, str6);
+		break;
+	case SDMMCAnalyzerResults::TEXTTYPE_TABULAR:
+		AddTabularText(str1, str2, str3, str4, str5, str6);
+		break;
+	case SDMMCAnalyzerResults::TEXTTYPE_FILE:
+		//TODO
+		break;
+	default:
+		break;
+	}
 }
