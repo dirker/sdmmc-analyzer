@@ -1,6 +1,6 @@
 #include "SDMMCHelpers.h"
 
-static struct MMCResponse responses[64] = {
+static struct MMCResponse mmc_responses[64] = {
 	/*  0 */ {MMC_RSP_NONE,     0,   0, false},
 	/*  1 */ {MMC_RSP_R3,      32,   5, false},
 	/*  2 */ {MMC_RSP_R2_CID, 128,   5, false},
@@ -67,8 +67,79 @@ static struct MMCResponse responses[64] = {
 	/* 63 */ {MMC_RSP_NONE,     0,   0, false}, /* reserved */
 };
 
-static struct MMCResponse invalid_response = {
+static struct SDResponse sd_responses[64] = {
+	/*  0 */{ SD_RSP_NONE,     0,   0, false },
+	/*  1 */{ SD_RSP_R3,      32,   5, false },
+	/*  2 */{ SD_RSP_R2_CID, 128,   5, false },
+	/*  3 */{ SD_RSP_R1,      32,  64, false },
+	/*  4 */{ SD_RSP_NONE,     0,   0, false },
+	/*  5 */{ SD_RSP_R1,      32,  64, true },
+	/*  6 */{ SD_RSP_R1,      32,  64, true },
+	/*  7 */{ SD_RSP_R1,      32,  64, true },
+	/*  8 */{ SD_RSP_R1,      32,  64, false },
+	/*  9 */{ SD_RSP_R2_CSD, 128,  64, false },
+	/* 10 */{ SD_RSP_R2_CID, 128,  64, false },
+	/* 11 */{ SD_RSP_R1,      32,  64, false },
+	/* 12 */{ SD_RSP_R1,      32,  64, false },
+	/* 13 */{ SD_RSP_R1,      32,  64, false },
+	/* 14 */{ SD_RSP_R1,      32,  64, false },
+	/* 15 */{ SD_RSP_NONE,     0,   0, false },
+	/* 16 */{ SD_RSP_R1,      32,  64, false },
+	/* 17 */{ SD_RSP_R1,      32,  64, false },
+	/* 18 */{ SD_RSP_R1,      32,  64, false },
+	/* 19 */{ SD_RSP_R1,      32,  64, false },
+	/* 20 */{ SD_RSP_R1,      32,  64, false },
+	/* 21 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 22 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 23 */{ SD_RSP_R1,      32,  64, false },
+	/* 24 */{ SD_RSP_R1,      32,  64, false },
+	/* 25 */{ SD_RSP_R1,      32,  64, false },
+	/* 26 */{ SD_RSP_R1,      32,  64, false },
+	/* 27 */{ SD_RSP_R1,      32,  64, false },
+	/* 28 */{ SD_RSP_R1,      32,  64, true },
+	/* 29 */{ SD_RSP_R1,      32,  64, true },
+	/* 30 */{ SD_RSP_R1,      32,  64, false },
+	/* 31 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 32 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 33 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 34 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 35 */{ SD_RSP_R1,      32,  64, false },
+	/* 36 */{ SD_RSP_R1,      32,  64, false },
+	/* 37 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 38 */{ SD_RSP_R1,      32,  64, true },
+	/* 39 */{ SD_RSP_R4,      32,  64, false },
+	/* 40 */{ SD_RSP_R5,      32,  64, false },
+	/* 41 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 42 */{ SD_RSP_R1,      32,  64, false },
+	/* 43 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 44 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 45 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 46 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 47 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 48 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 49 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 50 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 51 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 52 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 53 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 54 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 55 */{ SD_RSP_R1,      32,  64, false },
+	/* 56 */{ SD_RSP_R1,      32,  64, false },
+	/* 57 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 58 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 59 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 60 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 61 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 62 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+	/* 63 */{ SD_RSP_NONE,     0,   0, false }, /* reserved */
+};
+
+static struct MMCResponse mmc_invalid_response = {
 	MMC_RSP_NONE,  0,   0, false
+};
+
+static struct SDResponse sd_invalid_response = {
+	SD_RSP_NONE,  0,   0, false
 };
 
 U8 SDMMCHelpers::crc7(const U8 *data, unsigned int size)
@@ -86,9 +157,17 @@ U8 SDMMCHelpers::crc7(const U8 *data, unsigned int size)
 struct MMCResponse SDMMCHelpers::MMCCommandResponse(unsigned int index)
 {
 	if (index > 63)
-		return invalid_response;
+		return mmc_invalid_response;
 
-	return responses[index];
+	return mmc_responses[index];
+}
+
+struct SDResponse SDMMCHelpers::SDCommandResponse(unsigned int index)
+{
+	if (index > 63)
+		return sd_invalid_response;
+
+	return sd_responses[index];
 }
 
 /*
