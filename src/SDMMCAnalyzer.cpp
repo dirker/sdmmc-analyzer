@@ -55,7 +55,9 @@ void SDMMCAnalyzer::WorkerThread()
 				WaitForAndReadMMCResponse(response);
 		}
 		else {
-			/* FIXME: implement SD response handling */
+			struct SDResponse response = SDMMCHelpers::SDCommandResponse(cmdindex);
+			if (response.mType != MMC_RSP_NONE)
+				WaitForAndReadSDResponse(response);
 		}
 	}
 }
@@ -164,6 +166,85 @@ int SDMMCAnalyzer::TryReadCommand()
 
 int SDMMCAnalyzer::WaitForAndReadMMCResponse(struct MMCResponse response)
 {
+	int timeout = response.mTimeout + 3; // add some slack time
+
+	while (timeout-- >= 0 && mCommand->GetBitState() != BIT_LOW)
+		AdvanceToNextClock();
+
+	if (timeout < 0)
+		return -1;
+
+	mResults->AddMarker(mClock->GetSampleNumber(), AnalyzerResults::Start, mSettings->mCommandChannel);
+	AdvanceToNextClock();
+
+	/* transfer bit */
+	if (mCommand->GetBitState() != BIT_LOW) {
+		/* if card is not transferring this is no response */
+		mResults->AddMarker(mClock->GetSampleNumber(), AnalyzerResults::X, mSettings->mCommandChannel);
+		return -1;
+	}
+	AdvanceToNextClock();
+
+	/* skip 6 bits */
+	for (int i = 0; i < 6; i++)
+		AdvanceToNextClock();
+
+	/* response */
+	{
+		Frame frame;
+
+		frame.mStartingSampleInclusive = mClock->GetSampleNumber();
+		frame.mData1 = 0;
+		frame.mData2 = 0;
+		frame.mType = SDMMCAnalyzerResults::FRAMETYPE_RESPONSE;
+		frame.mFlags = response.mType;
+
+		int bits = response.mBits;
+
+		for (int i = 0; i < 64 && bits > 0; i++, bits--) {
+			frame.mData1 = (frame.mData1 << 1) | mCommand->GetBitState();
+			AdvanceToNextClock();
+		}
+
+		for (int i = 0; i < 64 && bits > 0; i++, bits--) {
+			frame.mData2 = (frame.mData2 << 1) | mCommand->GetBitState();
+			AdvanceToNextClock();
+		}
+
+		frame.mEndingSampleInclusive = mClock->GetSampleNumber() - 1;
+		mResults->AddFrame(frame);
+	}
+
+	/* crc */
+	if (response.mType != MMC_RSP_R2_CID && response.mType != MMC_RSP_R2_CSD) {
+		Frame frame;
+
+		frame.mStartingSampleInclusive = mClock->GetSampleNumber();
+		frame.mData1 = 0;
+		frame.mType = SDMMCAnalyzerResults::FRAMETYPE_CRC;
+
+		for (int i = 0; i < 7; i++) {
+			frame.mData1 = (frame.mData1 << 1) | mCommand->GetBitState();
+			AdvanceToNextClock();
+		}
+
+		frame.mEndingSampleInclusive = mClock->GetSampleNumber() - 1;
+		mResults->AddFrame(frame);
+	}
+
+	/* stop bit */
+	mResults->AddMarker(mClock->GetSampleNumber(), AnalyzerResults::Stop, mSettings->mCommandChannel);
+
+	mResults->CommitResults();
+	ReportProgress(mClock->GetSampleNumber());
+
+	return 1;
+}
+
+int SDMMCAnalyzer::WaitForAndReadSDResponse(struct SDResponse response)
+{
+	//TODO: update for SD responses as needed.
+
 	int timeout = response.mTimeout + 3; // add some slack time
 
 	while (timeout-- >= 0 && mCommand->GetBitState() != BIT_LOW)

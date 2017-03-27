@@ -30,6 +30,7 @@ protected:
 	void AdvanceToNextClock();
 	int TryReadCommand();
 	int WaitForAndReadMMCResponse(struct MMCResponse response);
+	int WaitForAndReadSDResponse(struct SDResponse response);
 
 protected:
 	std::auto_ptr<SDMMCAnalyzerSettings> mSettings;

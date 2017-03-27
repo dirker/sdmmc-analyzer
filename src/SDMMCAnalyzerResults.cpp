@@ -80,6 +80,8 @@ void SDMMCAnalyzerResults::GenerateFrameText(U64 frame_index, DisplayBase displa
 
 	case FRAMETYPE_RESPONSE:
 	{
+		//TODO: break MMC out into another method and create one for sd card responses as well.
+
 		char str_32[33];
 
 		switch (frame.mFlags) {
