@@ -80,10 +80,6 @@ command = "g++ "
 for link_path in link_paths:
     command += "-L\"" + link_path + "\" "
 
-#add libraries to link against
-for link_dependency in link_dependencies:
-    command += link_dependency + " "
-
 #make a dynamic (shared) library (.so/.dylib)
 
 if dylib_ext == ".dylib":
@@ -110,6 +106,10 @@ else:
 for cpp_file in cpp_files:
     release_command += "release/" + cpp_file.replace( ".cpp", ".o" ) + " "
     debug_command += "debug/" + cpp_file.replace( ".cpp", ".o" ) + " "
+
+#add libraries to link against
+for link_dependency in link_dependencies:
+    command += link_dependency + " "
     
 #run the commands from the command line
 print release_command
