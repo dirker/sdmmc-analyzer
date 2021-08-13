@@ -11,7 +11,7 @@ In order to compile the code the Saleae Analyzer SDK is needed which can be down
 Prior to compiling the SDK zip file should be unpacked into the directory containing the cloned sdmmc-analyzer repository, e.g.:
 
     +-rootdir/
-      +-SaleaeAnalyzerSdk-1.1.9/
+      +-AnalyzerSDK/
       +-sdmmc-analyzer/
 
 ### Mac OS X
