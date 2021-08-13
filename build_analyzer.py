@@ -8,7 +8,7 @@ if platform.system().lower() == "darwin":
 else:
     dylib_ext = ".so"
     
-print "Running on " + platform.system()
+print("Running on " + platform.system())
 
 #make sure the release folder exists, and clean out any .o/.so file if there are any
 if not os.path.exists( "release" ):
@@ -39,8 +39,8 @@ cpp_files = glob.glob( "*.cpp" );
 os.chdir( ".." )
 
 #specify the search paths/dependencies/options for gcc
-include_paths = [ "../SaleaeAnalyzerSdk-1.1.9/include" ]
-link_paths = [ "../SaleaeAnalyzerSdk-1.1.9/lib" ]
+include_paths = [ "../AnalyzerSDK/include" ]
+link_paths = [ "../AnalyzerSDK/lib" ]
 link_dependencies = [ "-lAnalyzer" ] #refers to libAnalyzer.dylib or libAnalyzer.so
 
 debug_compile_flags = "-O0 -w -c -fpic -g3"
@@ -67,9 +67,9 @@ for cpp_file in cpp_files:
     debug_command += "\"" + "src/" + cpp_file + "\"" #the cpp file to compile
 
     #run the commands from the command line
-    print release_command
+    print(release_command)
     os.system( release_command )
-    print debug_command
+    print(debug_command)
     os.system( debug_command )
     
 #lastly, link
@@ -112,9 +112,9 @@ for cpp_file in cpp_files:
     debug_command += "debug/" + cpp_file.replace( ".cpp", ".o" ) + " "
     
 #run the commands from the command line
-print release_command
+print(release_command)
 os.system( release_command )
-print debug_command
+print(debug_command)
 os.system( debug_command )
 
         
